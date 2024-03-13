@@ -1,6 +1,7 @@
 // 初始化 three.js 基础环境
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { loadManager } from "@/model/loadManager.js";
 
 let scene, camera, renderer, controls;
 // 这次 app 标签作为 three.js 的画布容器
@@ -19,6 +20,11 @@ function init() {
   renderer.shadowMap.enabled = true;
   renderer.setSize(app.clientWidth, app.clientHeight);
   app.appendChild(renderer.domElement);
+
+  // 加载汽车模型
+  loadManager("glb/Lamborghini.glb", (model) => {
+    console.log(model);
+  });
 }
 
 function createControls() {
