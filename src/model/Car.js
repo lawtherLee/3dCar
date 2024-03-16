@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { MySprite } from "@/model/MySprite.js";
 
 /**
  * 汽车类
@@ -24,15 +25,32 @@ export class Car {
         leftDoor: {
           name: "Object_64",
           model: {},
+          mark: [
+            {
+              name: "sprite",
+              url: "image/sprite.png",
+              scale: [0.2, 0.2],
+              position: [1.07, 1.94, -0.23],
+            },
+          ],
         },
         rightDoor: {
           name: "Object_77",
           model: {},
+          mark: [
+            {
+              name: "sprite",
+              url: "image/sprite.png",
+              scale: [0.2, 0.2],
+              position: [-1.05, 0.78, -0.23],
+            },
+          ],
         },
       },
     };
     this.init();
     this.modifyCarBody();
+    this.createDoorSprite();
   }
   init() {
     this.scene.add(this.model);
@@ -53,6 +71,22 @@ export class Car {
     // 赋予小物体材质
     Object.values(this.carModel.body).forEach((item) => {
       item.model.material = bodyMaterial;
+    });
+  }
+
+  // 加载精灵物体
+  createDoorSprite() {
+    const markList = [
+      this.carModel.body.leftDoor,
+      this.carModel.body.rightDoor,
+    ];
+    markList.forEach((item) => {
+      item.mark.forEach((ele) => {
+        if (ele.name === "sprite") {
+          const sprite = new MySprite(ele);
+          item.model.add(sprite);
+        }
+      });
     });
   }
 }
