@@ -2,6 +2,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { loadManager } from "@/model/loadManager.js";
+import { Car } from "@/model/Car.js";
+import { MyLight } from "@/effect/MyLight.js";
 
 let scene, camera, renderer, controls;
 // 这次 app 标签作为 three.js 的画布容器
@@ -23,7 +25,8 @@ function init() {
 
   // 加载汽车模型
   loadManager("glb/Lamborghini.glb", (model) => {
-    console.log(model);
+    new Car(model, scene, camera, controls);
+    new MyLight(scene);
   });
 }
 
