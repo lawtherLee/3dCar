@@ -10,7 +10,7 @@ export function loadManager(path, successFn) {
   gltfLoader.load(
     path,
     (gltf) => successFn(gltf.scene),
-    (process) => console.log(process),
+    (process) => {},
     (error) => {
       throw new Error(error);
     },
