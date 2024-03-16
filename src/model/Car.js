@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { MySprite } from "@/model/MySprite.js";
-
+import { ClickHandler } from "@/utils/ClickHandler.js";
+import gsap from "gsap";
 /**
  * 汽车类
  */
@@ -85,8 +86,24 @@ export class Car {
         if (ele.name === "sprite") {
           const sprite = new MySprite(ele);
           item.model.add(sprite);
+          // 绑定交互
+          ClickHandler.getInstance().addMesh(sprite, (spriteObj) => {
+            const targetDoor = spriteObj.parent.parent.parent;
+            if (!targetDoor.userData.isOpen) {
+              // 没开门
+              // targetDoor.rotation.set(Math.PI / 3, 0, 0);
+              this.setDoorAnimation(targetDoor, { x: Math.PI / 3 });
+              targetDoor.userData.isOpen = true;
+            } else {
+              this.setDoorAnimation(targetDoor, { x: 0 });
+              targetDoor.userData.isOpen = false;
+            }
+          });
         }
       });
     });
+  }
+  setDoorAnimation(mesh, obj) {
+    gsap.to(mesh.rotation, { x: obj.x, duration: 1, ease: "power1.in" });
   }
 }

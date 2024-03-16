@@ -6,7 +6,7 @@ import { Car } from "@/model/Car.js";
 import { MyLight } from "@/effect/MyLight.js";
 import { Sky } from "@/effect/Sky.js";
 
-let scene, camera, renderer, controls;
+export let scene, camera, renderer, controls;
 // 这次 app 标签作为 three.js 的画布容器
 const app = document.querySelector(".app");
 
