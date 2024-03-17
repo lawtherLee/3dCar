@@ -20,3 +20,12 @@ coatDivList.forEach((ele) => {
     EventBus.getInstance().emit("celPrice");
   });
 });
+
+// 场景切换
+const sceneDivList = document.querySelectorAll(".scene_group>div");
+sceneDivList.forEach((ele) => {
+  ele.addEventListener("click", () => {
+    const sceneName = ele.dataset.poi;
+    EventBus.getInstance().emit("changeSky", sceneName);
+  });
+});
