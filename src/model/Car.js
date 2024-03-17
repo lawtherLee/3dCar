@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { MySprite } from "@/model/MySprite.js";
 import { ClickHandler } from "@/utils/ClickHandler.js";
 import gsap from "gsap";
+import { EventBus } from "@/utils/EventBus.js";
 /**
  * 汽车类
  */
@@ -49,6 +50,37 @@ export class Car {
         },
       },
     };
+    // 车数值相关（记录用于发给后台-保存用户要购车相关信息）
+    this.info = {
+      color: [
+        {
+          name: "土豪金",
+          color: "#ff9900",
+          isSelected: true,
+        },
+        {
+          name: "传奇黑",
+          color: "#343a40",
+          isSelected: false,
+        },
+        {
+          name: "海蓝",
+          color: "#409EFF",
+          isSelected: false,
+        },
+        {
+          name: "玫瑰紫",
+          color: "#6600ff",
+          isSelected: false,
+        },
+        {
+          name: "银灰色",
+          color: "#DCDFE6",
+          isSelected: false,
+        },
+      ],
+    };
+
     this.init();
     this.modifyCarBody();
     this.createDoorSprite();
@@ -57,6 +89,18 @@ export class Car {
     this.scene.add(this.model);
     Object.values(this.carModel.body).forEach((obj) => {
       obj.model = this.model.getObjectByName(obj.name);
+    });
+
+    // 订阅切换车身颜色
+    EventBus.getInstance().on("changeCarColor", (color) => {
+      Object.values(this.carModel.body).forEach((item) => {
+        item.model.material.color = new THREE.Color(color);
+      });
+      // 保存选择的车颜色
+      this.info.color.forEach((item) => {
+        item.isSelected = item.color === color;
+      });
+      console.log(this.info.color);
     });
   }
   // 修改车身材质
