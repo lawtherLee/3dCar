@@ -17,5 +17,6 @@ coatDivList.forEach((ele) => {
   ele.addEventListener("click", () => {
     const coatName = ele.dataset.co;
     EventBus.getInstance().emit("changeCarCoat", coatName);
+    EventBus.getInstance().emit("celPrice");
   });
 });

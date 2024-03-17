@@ -52,6 +52,7 @@ export class Car {
     };
     // 车数值相关（记录用于发给后台-保存用户要购车相关信息）
     this.info = {
+      allPrice: 2444700,
       color: [
         {
           name: "土豪金",
@@ -133,7 +134,14 @@ export class Car {
       this.info.film.forEach((item) => {
         item.isSelected = item.name === coatName;
       });
-      console.log(this.info.film);
+    });
+
+    // 计算总价
+    EventBus.getInstance().on("celPrice", () => {
+      const filmTarget = this.info.film.find((item) => item.isSelected);
+      const celPrice = this.info.allPrice + filmTarget.price;
+      document.querySelector(".price>span").innerHTML =
+        `¥${celPrice.toFixed(2)}`;
     });
   }
   // 修改车身材质
