@@ -79,6 +79,19 @@ export class Car {
           isSelected: false,
         },
       ],
+      // 贴膜
+      film: [
+        {
+          name: "高光",
+          price: 0,
+          isSelected: true,
+        },
+        {
+          name: "磨砂",
+          price: 20000,
+          isSelected: false,
+        },
+      ],
     };
 
     this.init();
@@ -100,7 +113,23 @@ export class Car {
       this.info.color.forEach((item) => {
         item.isSelected = item.color === color;
       });
-      console.log(this.info.color);
+    });
+
+    // 订阅贴膜修改
+    EventBus.getInstance().on("changeCarCoat", (coatName) => {
+      if (coatName === "高光") {
+        Object.values(this.carModel.body).forEach((item) => {
+          item.model.material.roughness = 0.5; // 粗糙度
+          item.model.material.metalness = 1; // 金属度
+          item.model.material.clearcoat = 1; // 清漆度
+        });
+      } else if (coatName === "磨砂") {
+        Object.values(this.carModel.body).forEach((item) => {
+          item.model.material.roughness = 1; // 粗糙度
+          item.model.material.metalness = 0.5; // 金属度
+          item.model.material.clearcoat = 0; // 清漆度
+        });
+      }
     });
   }
   // 修改车身材质
