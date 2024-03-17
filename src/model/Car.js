@@ -130,6 +130,10 @@ export class Car {
           item.model.material.clearcoat = 0; // 清漆度
         });
       }
+      this.info.film.forEach((item) => {
+        item.isSelected = item.name === coatName;
+      });
+      console.log(this.info.film);
     });
   }
   // 修改车身材质
