@@ -13,7 +13,7 @@ export class Sky {
     // 切换场景
     EventBus.getInstance().on("changeSky", (skyName) => {
       if (skyName === this.nowSkyName) return;
-      this.clear();
+      this.clearMesh();
       if (skyName === "展厅") {
         this.createInDoor();
         this.nowSkyName = "展厅";
@@ -76,7 +76,7 @@ export class Sky {
   }
 
   // 清除场景
-  clear() {
+  clearMesh() {
     this.nowMesh.forEach((item) => {
       item.geometry.dispose();
       item.material.dispose();

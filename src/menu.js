@@ -29,3 +29,12 @@ sceneDivList.forEach((ele) => {
     EventBus.getInstance().emit("changeSky", sceneName);
   });
 });
+
+// 视角切换
+const lookDivList = document.querySelectorAll(".look_group>div");
+lookDivList.forEach((ele) => {
+  ele.addEventListener("click", () => {
+    const viewName = ele.dataset.po;
+    EventBus.getInstance().emit("changeCarAngleView", viewName);
+  });
+});

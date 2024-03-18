@@ -49,6 +49,24 @@ export class Car {
           ],
         },
       },
+      glass: {
+        // 玻璃
+        front: {
+          // 前玻璃
+          name: "Object_90",
+          model: {},
+        },
+        leftGlass: {
+          // 左玻璃
+          name: "Object_68",
+          model: {},
+        },
+        rightGlass: {
+          // 右玻璃
+          name: "Object_81",
+          model: {},
+        },
+      },
     };
     // 车数值相关（记录用于发给后台-保存用户要购车相关信息）
     this.info = {
@@ -95,13 +113,59 @@ export class Car {
       ],
     };
 
+    // 汽车各种视角坐标对象
+    this.positionObj = {
+      // 主驾驶
+      main: {
+        camera: {
+          x: 0.36,
+          y: 0.96,
+          z: -0.16,
+        },
+        controls: {
+          x: 0.36,
+          y: 0.87,
+          z: 0.03,
+        },
+      },
+      // 副驾驶位
+      copilot: {
+        camera: {
+          x: -0.39,
+          y: 0.87,
+          z: 0.07,
+        },
+        controls: {
+          x: -0.39,
+          y: 0.85,
+          z: 0.13,
+        },
+      },
+      // 外面观察
+      outside: {
+        camera: {
+          x: 3,
+          y: 1.5,
+          z: 3,
+        },
+        controls: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+      },
+    };
+
     this.init();
-    this.modifyCarBody();
+    this.modifyCarDefault();
     this.createDoorSprite();
   }
   init() {
     this.scene.add(this.model);
     Object.values(this.carModel.body).forEach((obj) => {
+      obj.model = this.model.getObjectByName(obj.name);
+    });
+    Object.values(this.carModel.glass).forEach((obj) => {
       obj.model = this.model.getObjectByName(obj.name);
     });
 
@@ -143,9 +207,14 @@ export class Car {
       document.querySelector(".price>span").innerHTML =
         `¥${celPrice.toFixed(2)}`;
     });
+
+    // 视角切换
+    EventBus.getInstance().on("changeCarAngleView", (viewName) => {
+      this.setCameraAnimation(this.positionObj[viewName]);
+    });
   }
-  // 修改车身材质
-  modifyCarBody() {
+  // 修改车身细节（材质，玻璃）
+  modifyCarDefault() {
     const bodyMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xff9900,
       roughness: 0.5, // 粗糙度
@@ -158,6 +227,14 @@ export class Car {
     Object.values(this.carModel.body).forEach((item) => {
       item.model.material = bodyMaterial;
     });
+
+    // 改变玻璃渲染面
+    Object.values(this.carModel.glass).forEach((item) => {
+      item.model.material.side = THREE.FrontSide; // 前面渲染
+    });
+
+    // 车顶双面渲染
+    this.carModel.body.roof.model.material.side = THREE.DoubleSide;
   }
 
   // 加载精灵物体
@@ -188,7 +265,21 @@ export class Car {
       });
     });
   }
+  // 车门动画
   setDoorAnimation(mesh, obj) {
     gsap.to(mesh.rotation, { x: obj.x, duration: 1, ease: "power1.in" });
+  }
+  // 视角切换动画
+  setCameraAnimation(obj) {
+    gsap.to(this.camera.position, {
+      ...obj.camera,
+      duration: 1,
+      ease: "power1.in",
+    });
+    gsap.to(this.controls.target, {
+      ...obj.controls,
+      duration: 1,
+      ease: "power1.in",
+    });
   }
 }
