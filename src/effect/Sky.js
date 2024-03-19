@@ -42,6 +42,7 @@ export class Sky {
       side: THREE.DoubleSide,
     });
     const plane = new THREE.Mesh(planeGeo, standardMaterial);
+    plane.receiveShadow = true;
     plane.rotation.set(-Math.PI / 2, 0, 0);
     this.scene.add(plane);
     this.nowMesh.push(plane);

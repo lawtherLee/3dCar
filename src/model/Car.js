@@ -162,6 +162,9 @@ export class Car {
   }
   init() {
     this.scene.add(this.model);
+
+    // 每个小物体都开启阴影
+    this.model.traverse((obi) => (obi.castShadow = true));
     Object.values(this.carModel.body).forEach((obj) => {
       obj.model = this.model.getObjectByName(obj.name);
     });
